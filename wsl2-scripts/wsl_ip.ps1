@@ -1,12 +1,8 @@
 # Make sure you backed up $windir\system32\Drivers\etc\hosts
 
-# Get output from ifconfig. For some unknown reason powershell do nothing when
-# you add one more pipe with awk '{print $2}'. Another bug I guess
-$get_from_wsl = wsl /bin/bash -c "ifconfig eth0 | grep 'inet\ 172' | head -1"
-# Select the ip 
-$new_ip = ($get_from_wsl |  Select-String -Pattern "\d{1,3}(\.\d{1,3}){3}" -AllMatches).Matches.Value | Select-Object -First 1
-# Prepare object with new string to add in hosts file
-$new_entry = $new_ip + " wsl"
+# Get ip from wsl, thanks Rakasch
+$wsl_ip = wsl hostname -I
+$new_entry = $wsl_ip + "wsl"
 
 
 # Path to hosts file
